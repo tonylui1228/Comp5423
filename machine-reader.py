@@ -108,7 +108,7 @@ def get_score(story, q_a, q, a):
 
 
 # Method for returning answer value based on answer with highest score
-def max_options(scores):
+def find_mc_answer(scores):
     if max(scores) == scores[0]:
         return 'A'
     if max(scores) == scores[1]:
@@ -121,32 +121,33 @@ def max_options(scores):
 
 
 def find_answer(story):
+    ans = ""
     for i, key in zip(range(4), story.qBank.keys()):
         q = key.split()
         scores = [0, 0, 0, 0]
 
         for j, answer in zip(range(4), story.qBank[key]):
             a = answer.split()
-            qAndA = q + a
-            scores[j] = get_score(story, qAndA, q, a)
+            q_a = q + a
+            scores[j] = get_score(story, q_a, q, a)
 
-        print(max_options(scores), end="")
-
+        ans += find_mc_answer(scores)
         if i < 3:
-            print("\t", end="")
-        else:
-            print()
+            ans += "\t"
+    return ans + "\n"
 
 
 def do_test(file):
     file = open(file, "r")
     data = []
     for line in file.readlines():
-        data.append(Story(line[:-1]))
+        line = line[:-1]
+        data.append(Story(line))
     file.close()
+
+    out = open('ans.txt', 'w')
     for story in data:
-        find_answer(story)
+        out.write(find_answer(story))
 
 
-# do_test('data/MCTest/mc160.test.tsv')
 do_test('data/MCTest/mc500.test.tsv')
