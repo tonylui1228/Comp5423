@@ -3,7 +3,7 @@ B	C	A	D
 B	C	A	D
 C	D	D	C
 A	C	C	A
-B	D	B	A
+B	D	B	B
 D	A	A	D
 A	D	A	A
 D	B	B	D
@@ -31,7 +31,7 @@ C	B	A	C
 D	B	B	D
 D	B	A	A
 A	C	D	B
-A	C	B	D
+C	C	B	D
 C	D	A	A
 D	C	A	D
 B	A	A	A
@@ -94,7 +94,7 @@ B	B	B	A
 B	A	D	D
 A	A	A	C
 A	D	C	A
-C	D	B	B
+A	D	B	B
 D	A	A	C
 A	A	B	D
 D	D	B	D

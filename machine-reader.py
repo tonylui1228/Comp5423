@@ -124,11 +124,11 @@ def find_answer(story):
     i = 0
     for key in story.qBank.keys():
         question = key.split()
-        scores = [0, 0, 0, 0]
+        scores = []
 
-        for j, answer in zip(range(4), story.qBank[key]):
+        for answer in story.qBank[key]:
             answer = answer.split()
-            scores[j] = get_score(story, question, answer)
+            scores.append(get_score(story, question, answer))
 
         ans += find_mc_answer(scores)
         if i < 3:
