@@ -87,27 +87,6 @@ def checkPOSandQType(currentScore, q, a):
     return currentScore
 
 
-def get_score(story, q_a, q, a):
-    content = story.text.split()
-    size = len(q_a)
-    q_a = set(q_a)
-    max_score = 0
-    for i in range(len(content) - size):
-        window = content[i: i + size]
-        score = 0
-        for word in q_a:
-            if word in window:
-                score += story.logC(word)
-
-        if score > max_score:
-            max_score = score
-
-    max_score = checkPOSandQType(max_score, q, a)
-
-    return max_score
-
-
-# Method for returning answer value based on answer with highest score
 def find_mc_answer(scores):
     if max(scores) == scores[0]:
         return 'A'
@@ -120,31 +99,56 @@ def find_mc_answer(scores):
     return 'A'
 
 
+def get_score(story, question, answer):
+    story_text = story.text.split()
+
+    question_and_answer = question + answer
+    window_size = len(question_and_answer)
+    question_and_answer = set(question_and_answer)
+    max_score = 0
+    for i in range(len(story_text) - window_size):
+        score = 0
+        sliding_window = story_text[i: i + window_size]
+        for word in question_and_answer:
+            if word in sliding_window:
+                score += story.logC(word)
+        if score > max_score:
+            max_score = score
+
+    max_score = checkPOSandQType(max_score, question, answer)
+    return max_score
+
+
 def find_answer(story):
     ans = ""
-    for i, key in zip(range(4), story.qBank.keys()):
-        q = key.split()
+    i = 0
+    for key in story.qBank.keys():
+        question = key.split()
         scores = [0, 0, 0, 0]
 
-        for j, answer in zip(range(4), story.qBank[key]):
-            a = answer.split()
-            q_a = q + a
-            scores[j] = get_score(story, q_a, q, a)
+        j = 0
+        for answer in story.qBank[key]:
+            answer = answer.split()
+            scores[j] = get_score(story, question, answer)
+            j += 1
 
         ans += find_mc_answer(scores)
         if i < 3:
             ans += "\t"
+        i += 1
     return ans + "\n"
 
 
 def do_test(file):
     file = open(file, "r")
     data = []
+    # read test data
     for line in file.readlines():
         line = line[:-1]
         data.append(Story(line))
     file.close()
 
+    # write answer data
     out = open('ans.txt', 'w')
     for story in data:
         out.write(find_answer(story))
